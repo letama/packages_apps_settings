@@ -170,6 +170,7 @@ public class StorageMeasurement {
 
         // Start the thread that will measure the disk usage.
         final HandlerThread handlerThread = new HandlerThread("MemoryMeasurement");
+
         handlerThread.start();
         mHandler = new MeasurementHandler(context, handlerThread.getLooper());
     }
@@ -422,7 +423,7 @@ public class StorageMeasurement {
             }
 
             // Measure misc files not counted under media
-            if (mIsInternal || mIsPrimary) {
+            if ((mIsInternal && Environment.isExternalStorageEmulated()) || mIsPrimary) {
                 final File path = mIsInternal ? currentEnv.getExternalStorageDirectory()
                         : mVolume.getPathFile();
                 details.miscSize = measureMisc(imcs, path);
@@ -473,8 +474,11 @@ public class StorageMeasurement {
     private long measureMisc(IMediaContainerService imcs, File dir) {
         mFileInfoForMisc = new ArrayList<FileInfo>();
 
+
         final File[] files = dir.listFiles();
-        if (files == null) return 0;
+        if (files == null) {
+	    return 0;
+	}
 
         // Get sizes of all top level nodes except the ones already computed
         long counter = 0;
