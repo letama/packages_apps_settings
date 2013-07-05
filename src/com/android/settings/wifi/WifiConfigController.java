@@ -100,6 +100,8 @@ public class WifiConfigController implements TextWatcher,
     public static final int WIFI_EAP_METHOD_TLS  = 1;
     public static final int WIFI_EAP_METHOD_TTLS = 2;
     public static final int WIFI_EAP_METHOD_PWD  = 3;
+    public static final int WIFI_EAP_METHOD_SIM  = 4;
+    public static final int WIFI_EAP_METHOD_AKA  = 5;
 
     private static final String TAG = "WifiConfigController";
 
@@ -376,6 +378,9 @@ public class WifiConfigController implements TextWatcher,
                         mEapIdentityView.getText().toString());
                 config.anonymous_identity.setValue((mEapAnonymousView.length() == 0) ? "" :
                         mEapAnonymousView.getText().toString());
+		if(((String) mEapMethodSpinner.getSelectedItem()).equals("SIM")) {
+		    config.pcsc.setValue("TRUE");
+		}
                 if (mPasswordView.length() != 0) {
                     config.password.setValue(mPasswordView.getText().toString());
                 }
